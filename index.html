@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <a
+      href="https://www.flaticon.com/free-icons/completed"
+      title="completed icons"
+      >Completed icons created by Paul J. - Flaticon</a
+    >
+
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <section id="header">
+      <nav>
+        <div>
+          <img
+            class="icon"
+            src="./assets/check.png"
+            alt="picture of notes management"
+          />
+        </div>
+      </nav>
+    </section>
+
+    <div class="Container">
+      <h1>To Do List</h1>
+      <div class="group-input">
+        <input
+          class="text-input"
+          type="text"
+          id="todo-input"
+          placeholder="Enter your task name "
+        />
+        <input class="date-input" type="datetime-local" id="deadline-input" />
+        <button class="button" id="add-btn">Add</button>
+      </div>
+      <!--  List Container -->
+      <table class="table-todos">
+        <thead>
+          <tr>
+            <thead>
+              Task Name
+            </thead>
+            <thead>
+              Target Date Completion
+            </thead>
+            <thead>
+              Status
+            </thead>
+            <thead>
+              Action
+            </thead>
+          </tr>
+        </thead>
+        <tbody id="todo-list"></tbody>
+      </table>
+    </div>
+    <script src="./script.js" defer></script>
+  </body>
+</html>

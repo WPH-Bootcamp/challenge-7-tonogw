@@ -1,0 +1,113 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.icon {
+  width: 200px;
+  padding-left: 60px;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #bad6f1;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: #ffffff;
+}
+
+h1 {
+  text-align: center;
+}
+
+group-input {
+  display: flex;
+}
+
+.text-input {
+  align-items: center;
+  text-size-adjust: 20px;
+  padding: 8px;
+  width: 250px;
+  border-radius: 4px;
+  border: 1px solid grey;
+  flex: 1;
+}
+
+.date-input {
+  border: 20px;
+}
+
+.button {
+  text-size-adjust: 20px;
+  padding: 8px 12px;
+  margin-left: 5px;
+  background-color: #fad27b;
+  border: 1px solid grey;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.List_todo {
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.overdue {
+  color: red;
+}
+
+.ongoing {
+  color: darkblue;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+table {
+  width: full;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+tbody.overdue {
+  color: red;
+}
+
+.ongoing {
+  color: orange;
+}
+
+.completed {
+  color: grey;
+}
+
+/* .table-todos {
+  color: #0056b3;
+} */

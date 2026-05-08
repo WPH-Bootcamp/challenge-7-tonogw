@@ -1,0 +1,14 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "Belajar Javascript",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "title": "Kerjakan Challenge-5",
+      "completed": false
+    }
+  ]
+}

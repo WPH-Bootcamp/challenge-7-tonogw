@@ -77,8 +77,31 @@ function init(): void {
 }
 
 function renderUser(): void {
-  if (el.userName) {
-    el.userName.textContent = getUserName();
+  const clickDefaultUser = getUserName();
+
+  if (!el.userName) {
+    return;
+    // el.userName.textContent = getUserName();
+  }
+
+  el.userName.textContent = clickDefaultUser;
+
+  if (clickDefaultUser === DEFAULT_USER) {
+    el.userName.style.cursor = "pointer";
+
+    el.userName.onclick = () => {
+      const replaceGuest = prompt("Input your name to replace Guest");
+
+      if (!replaceGuest || !replaceGuest.trim()) {
+        return;
+      }
+
+      setUserName(clickDefaultUser.trim());
+      renderUser();
+    };
+  } else {
+    el.userName.style.cursor = "default";
+    el.userName.onclick = null;
   }
 }
 
@@ -95,13 +118,17 @@ function bindEvents(): void {
     showMain();
 
     if (userName === "Guest") {
-      const input = prompt("Please input your name: ");
+      const clickDefaultUser = prompt("Please input your name: ");
 
-      if (input && input.trim()) {
-        setUserName(input);
+      if (clickDefaultUser && clickDefaultUser.trim()) {
+        setUserName(clickDefaultUser);
       }
     }
     renderUser();
+  });
+
+  el.exitBtn?.addEventListener("click", () => {
+    showCover();
   });
 }
 

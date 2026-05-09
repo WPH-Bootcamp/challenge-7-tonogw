@@ -127,8 +127,19 @@ function bindEvents(): void {
     renderUser();
   });
 
+  // EXIT BUTTON TO SIGN OUT FROM TODO APP
   el.exitBtn?.addEventListener("click", () => {
     showCover();
+  });
+
+  // OPEN FORM BUTTON TO ADD NEW TASK OR TODO
+  el.openBtn?.addEventListener("click", () => {
+    openAddForm();
+  });
+
+  // CANCEL BUTTON ON FORM TODO
+  el.cancelBtn?.addEventListener("click", () => {
+    showMain();
   });
 }
 
@@ -142,6 +153,22 @@ function showMain(): void {
 function showCover(): void {
   el.coverPage?.classList.remove("hidden");
   el.mainPage?.classList.add("hidden");
+}
+
+// FORM TO INPUT OR ADD TODO/ TASK
+function openAddForm(): void {
+  // el.formTitle!.textContent = "Add Task";
+  el.formTitle!.textContent = "page-input-open";
+  (el.titleInput as HTMLInputElement).value = "";
+  (el.descInput as HTMLInputElement).value = "";
+  (el.dateInput as HTMLInputElement).value = "";
+
+  el.inputPage?.classList.remove("hidden");
+}
+
+// EXIT FROM FORM INPUT
+function closeForm(): void {
+  el.inputPage?.classList.add("hidden");
 }
 
 export async function getTodosFromAPI(): Promise<Todo[]> {

@@ -22,3 +22,69 @@
 // - Berikan nomor urut untuk memudahkan user memilih
 
 // TODO: Buat fungsi untuk mencari To-Do berdasarkan keyword
+
+import { Todo, TodoStatus, sortField } from "./types.js";
+import { saveTodos, loadTodos } from "./storage.js";
+
+export class TodoService {
+  //   private todos: Todo[] = [];
+  private todos: Todo[];
+
+  constructor(initial: Todo[] = []) {
+    this.todos = initial;
+  }
+
+  getAll(): Todo[] {
+    return this.todos;
+  }
+
+  add(todo: Todo): void {
+    this.todos.push(todo);
+  }
+
+  //   delete(id: string): void {
+  //     const todos = this.todos.find((t) => t.id !== id);
+  //   }
+
+  //   toggle(id: string): void {
+  //     const todo = this.todos.find((t) => t.id === id);
+  //     if (!todo) throw new Error("Todo not found");
+
+  //     todo.completed = !todo.completed;
+  //   }
+
+  delete(id: string): void {
+    const before = this.todos.length;
+
+    this.todos = this.todos.filter((t) => t.id !== id);
+
+    if (this.todos.length === before) {
+      throw new Error("Todo not found");
+    }
+  }
+
+  toggle(id: string): void {
+    const todo = this.todos.find((t) => t.id === id);
+
+    if (!todo) {
+      throw Error("Todo not found");
+    }
+    todo.completed = !todo.completed;
+  }
+
+  sortBy(field: sortField | "deadline" | "completed"): void {
+    this.todos.sort((a, b) => {
+      if (field === "title") {
+        return a.title.localeCompare(b.title);
+      }
+      if (field === "deadline") {
+        return (
+          new Date(a.deadline || 0).getTime() -
+          new Date(b.deadline || 0).getTime()
+        );
+      }
+
+      return Number(a.completed) - Number(b.completed);
+    });
+  }
+}

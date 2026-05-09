@@ -3,61 +3,141 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo App</title>
-    <a
-      href="https://www.flaticon.com/free-icons/completed"
-      title="completed icons"
-      >Completed icons created by Paul J. - Flaticon</a
-    >
-
+    <title>To-Do List by Tonogw</title>
+    <link rel="icon" type="image/png" href="./assets/check.png" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <section id="header">
-      <nav>
-        <div>
-          <img
-            class="icon"
-            src="./assets/check.png"
-            alt="picture of notes management"
-          />
-        </div>
-      </nav>
-    </section>
+    <div class="container">
+      <header>
+        <div id="page-cover" class="page-cover">
+          <div id="img-icon">
+            <img class="img-icon" src="./assets/check.png" alt="note board" />
+            <h1 class="app-name">To-Do List</h1>
+          </div>
 
-    <div class="Container">
-      <h1>To Do List</h1>
-      <div class="group-input">
-        <input
-          class="text-input"
-          type="text"
-          id="todo-input"
-          placeholder="Enter your task name "
-        />
-        <input class="date-input" type="datetime-local" id="deadline-input" />
-        <button class="button" id="add-btn">Add</button>
+          <button id="start-btn" class="start-btn">Let's start</button>
+        </div>
+      </header>
+
+      <div id="page-main" class="page-page hidden">
+        <div id="page-main-navbar" class="page-main-navbar">
+          <div class="profile-left">
+            <!-- Future enhancement editable picture profile -->
+            <img
+              class="img-navbar-profile"
+              src="./assets/check.png"
+              alt="profile picture"
+            />
+
+            <!-- Greetings to End User -->
+            <h2>Hallo, <span id="user-name"></span></h2>
+          </div>
+          <div class="profile-right">
+            <span id="exit-lbl" class="exit-lbl">X</span>
+          </div>
+        </div>
+
+        <!-- Pop up window to add new Task -->
+        <div id="page-input" class="page-input hidden">
+          <div class="page-input-content">
+            <h2>Add Task</h2>
+
+            <div class="form">
+              <label for="page-input-content-title">Task Name</label>
+              <input
+                id="page-input-content-title"
+                type="text"
+                placeholder="Input Task Name"
+                class="text-input-title"
+              />
+
+              <label for="page-input-desc">Description</label>
+              <textarea
+                id="page-input-desc"
+                class="task-detail"
+                name="task-detail"
+                placeholder="Input Task Detail"
+              ></textarea>
+
+              <label class="page-input-date-lbl" for="page-input-date-input"
+                >Deadline</label
+              >
+              <!-- To made date picker & add button on the same row -->
+              <div class="row">
+                <input
+                  id="page-input-date-input"
+                  type="datetime-local"
+                  class="page-input-date-input"
+                />
+                <button id="save-task">Add</button>
+              </div>
+
+              <!-- Button back to main page -->
+              <div class="page-input-actions">
+                <button
+                  id="page-input-cancel-btn"
+                  class="page-input-cancel-btn"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pop up window to edit task -->
+          <!-- <div id="page-edit" class="page-input hidden">
+            <div class="page-input-content">
+              <h2></h2>
+
+              <select id="edit-field">
+                <option value="description">Description</option>
+                <option value="deadline">Deadline</option>
+              </select>
+
+              <input id="edit-input" type="text" />
+
+              <button id="update-task">Update</button>
+              <button id="cancel-edit">Cancel</button>
+            </div>
+          </div> -->
+        </div>
+
+        <!-- Button pop up window to add new task -->
+        <button id="page-input-open" class="page-input-open-btn">
+          + Add Task
+        </button>
+
+        <!-- Table window to scroll vertically -->
+        <div id="page-main-table" class="table-container">
+          <div class="table">
+            <table>
+              <thead>
+                <tr>
+                  <th id="sort-title" onclick="sortTodos('title')">
+                    Task name
+                  </th>
+                  <th>Description</th>
+                  <th onclick="sortTodos('deadline')">Deadline</th>
+                  <th onclick="sortTodos('completed')">Status</th>
+
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="todo-list" class="todo-container"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <!--  List Container -->
-      <table class="table-todos">
-        <thead>
-          <tr>
-            <thead>
-              Task Name
-            </thead>
-            <thead>
-              Target Date Completion
-            </thead>
-            <thead>
-              Status
-            </thead>
-            <thead>
-              Action
-            </thead>
-          </tr>
-        </thead>
-        <tbody id="todo-list"></tbody>
-      </table>
+
+      <div class="footer">
+        <footer>
+          &copy; 2026, gunar<b>TO</b> wibiso<b>NO</b>. All rights reserved
+        </footer>
+      </div>
     </div>
-    <script src="./script.js" defer></script>
+    <!-- <script src="./script.js"></script> -->
+    <script type="module" src="./dist/index.js"></script>
   </body>
 </html>

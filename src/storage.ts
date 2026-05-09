@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as path from 'path';
+// import * as fs from "fs";
+// import * as path from "path";
 
 // TODO: Definisikan path file untuk menyimpan data To-Do
 
@@ -10,3 +10,22 @@ import * as path from 'path';
 // Hint: Jangan lupa konversi ke JSON string sebelum disimpan
 
 // TODO: Buat fungsi untuk inisialisasi storage (buat file kosong jika belum ada)
+
+import { Todo } from "./types.js";
+
+const STORAGE_KEY = "todo-app-data";
+
+export function saveTodos(todos: Todo[]): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+}
+
+export function loadTodos(): Todo[] {
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (!data) return [];
+
+  const parsed: unknown = JSON.parse(data);
+
+  if (!Array.isArray(parsed)) return [];
+
+  return parsed as Todo[];
+}

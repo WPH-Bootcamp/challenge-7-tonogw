@@ -139,12 +139,15 @@ function bindEvents(): void {
 
   // CANCEL BUTTON ON FORM TODO
   el.cancelBtn?.addEventListener("click", () => {
-    showMain();
+    closeForm();
   });
 }
 
 // SHOW MAIN PAGE DISPLAY SCREEN
 function showMain(): void {
+  // el.mainPage!.classList = "cancel-edit";
+  el.mainPage!.classList = "form";
+  // el.mainPage!.classList = "page-input-cancel-btn";
   el.coverPage?.classList.add("hidden");
   el.mainPage?.classList.remove("hidden");
 }
@@ -168,7 +171,10 @@ function openAddForm(): void {
 
 // EXIT FROM FORM INPUT
 function closeForm(): void {
+  // el.mainPage!.classList = "page-input-cancel-btn";
+
   el.inputPage?.classList.add("hidden");
+  // el.mainPage?.classList.remove("hidden");
 }
 
 export async function getTodosFromAPI(): Promise<Todo[]> {

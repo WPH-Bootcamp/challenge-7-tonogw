@@ -70,6 +70,10 @@ body {
   gap: 10px;
 }
 
+.user-name {
+  color: red;
+}
+
 .profile-right {
   background: rgb(201, 201, 201);
   margin: 20px;

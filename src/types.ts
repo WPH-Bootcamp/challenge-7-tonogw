@@ -19,4 +19,9 @@ export interface Todo {
   completed: boolean;
 }
 
-export type sortField = "title" | "description" | "deadline" | "completed";
+export type sortField =
+  | "id"
+  | "title"
+  | "description"
+  | "deadline"
+  | "completed";

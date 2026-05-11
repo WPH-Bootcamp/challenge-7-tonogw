@@ -34,10 +34,12 @@ export class TodoService {
     this.todos = initial;
   }
 
+  // SHOW ALL TO DO LIST
   getAll(): Todo[] {
     return this.todos;
   }
 
+  //   ADD OR INSERT NEW TODO
   add(todo: Todo): void {
     this.todos.push(todo);
   }
@@ -53,6 +55,7 @@ export class TodoService {
   //     todo.completed = !todo.completed;
   //   }
 
+  //   DELETE A TODO LIST
   delete(id: string): void {
     const before = this.todos.length;
 
@@ -63,6 +66,7 @@ export class TodoService {
     }
   }
 
+  //   TO SEARCH AND SORT TODO LIST
   toggle(id: string): void {
     const todo = this.todos.find((t) => t.id === id);
 
@@ -72,11 +76,19 @@ export class TodoService {
     todo.completed = !todo.completed;
   }
 
-  sortBy(field: sortField | "deadline" | "completed"): void {
+  sortBy(field: sortField | "id" | "deadline" | "completed"): void {
     this.todos.sort((a, b) => {
+      // SORT BY UNIQ ID
+      if (field === "id") {
+        return a.id.localeCompare(b.id);
+      }
+
+      // SORT BY TITLE
       if (field === "title") {
         return a.title.localeCompare(b.title);
       }
+
+      // SORT BY END DATE
       if (field === "deadline") {
         return (
           new Date(a.deadline || 0).getTime() -

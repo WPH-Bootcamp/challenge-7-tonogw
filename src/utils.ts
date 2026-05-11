@@ -49,7 +49,7 @@ function getDayKey(date: Date): string {
     .toString()
     .padStart(3, "0");
 
-  return `${year} ${dayOfYear}`;
+  return `${year}${dayOfYear}`;
 }
 
 export function generateUniqueId(): string {

@@ -43,8 +43,49 @@ const USER_KEY = "userName";
 const DEFAULT_USER = "Guest";
 
 // API FETCH GET 7 POST
-const GET = "https://my-json-server.typicode.com/tonogw/todo-api/todos";
+const GET = "https://my-json-server.typicode.com/tonogw/todo-api/v1_todos";
 const POST = "https://jsonplaceholder.typicode.com/posts";
+
+export async function getTodosFromAPI(): Promise<Todo[]> {
+  try {
+    const res = await fetch(GET);
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const data: unknown = await res.json();
+
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    return data as Todo[];
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error("fetch error: ", err.message);
+    }
+
+    return [];
+  }
+}
+
+// POST DATA TO API
+export async function postTodoToAPI(todo: Todo): Promise<void> {
+  try {
+    await fetch(POST, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error("POST error: ", err.message);
+    }
+  }
+}
 
 // DOM ELEMENT
 const el = {
@@ -70,7 +111,24 @@ const description = (el.descInput as HTMLTextAreaElement).value.trim();
 
 let userName = getUserName();
 
-function init(): void {
+// function init(): void {
+//   bindEvents();
+//   renderUser();
+//   renderTodos(service);
+// }
+
+// INITIALIZATION APP
+async function init() {
+  let todos = loadTodos();
+
+  if (todos.length === 0) {
+    todos = await getTodosFromAPI();
+
+    saveTodos(todos);
+  }
+
+  service.getAll();
+
   bindEvents();
   renderUser();
   renderTodos(service);
@@ -141,6 +199,41 @@ function bindEvents(): void {
   el.cancelBtn?.addEventListener("click", () => {
     closeForm();
   });
+
+  el.sortTitle?.addEventListener("click", () => {
+    service.sortBy("title");
+    renderTodos(service);
+  });
+
+  // SAVE ADD TODO OR TASK
+  el.saveBtn?.addEventListener("click", () => {
+    const title = (el.titleInput as HTMLInputElement).value.trim();
+
+    const description = (el.descInput as HTMLInputElement).value.trim();
+
+    const deadline = (el.dateInput as HTMLInputElement).value.trim();
+
+    if (!title) {
+      alert("Title is required");
+      return;
+    }
+
+    service.add({
+      id: generateUniqueId(),
+      title,
+      description,
+      deadline,
+      completed: false,
+    });
+
+    saveTodos(service.getAll());
+    renderTodos(service);
+
+    (((el.titleInput as HTMLInputElement).value = ""),
+      ((el.descInput as HTMLTextAreaElement).value = ""),
+      ((el.dateInput as HTMLInputElement).value = ""),
+      openAddForm());
+  });
 }
 
 // SHOW MAIN PAGE DISPLAY SCREEN
@@ -160,8 +253,8 @@ function showCover(): void {
 
 // FORM TO INPUT OR ADD TODO/ TASK
 function openAddForm(): void {
-  // el.formTitle!.textContent = "Add Task";
-  el.formTitle!.textContent = "page-input-open";
+  el.formTitle!.textContent = "Add Task";
+
   (el.titleInput as HTMLInputElement).value = "";
   (el.descInput as HTMLInputElement).value = "";
   (el.dateInput as HTMLInputElement).value = "";
@@ -177,46 +270,10 @@ function closeForm(): void {
   // el.mainPage?.classList.remove("hidden");
 }
 
-export async function getTodosFromAPI(): Promise<Todo[]> {
-  try {
-    const res = await fetch(GET);
+// // SAVE TODO
+// function saveTodos(): void {
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch data");
-    }
-
-    const data: unknown = await res.json();
-
-    if (!Array.isArray(data)) {
-      return [];
-    }
-
-    return data as Todo[];
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error("fetch error: ", err.message);
-    }
-
-    return [];
-  }
-}
-
-// POST DATA TO API
-export async function postTodoToAPI(todo: Todo): Promise<void> {
-  try {
-    await fetch(POST, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(todo),
-    });
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error("POST error: ", err.message);
-    }
-  }
-}
+// }
 
 // function sortTodos(
 //     field:
@@ -246,11 +303,6 @@ export async function postTodoToAPI(todo: Todo): Promise<void> {
 //     });
 //   }
 // }
-
-el.sortTitle?.addEventListener("click", () => {
-  service.sortBy("title");
-  renderTodos(service);
-});
 
 export function renderTodos(service: TodoService) {
   const container = document.getElementById("todo-list")!;

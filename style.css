@@ -264,6 +264,13 @@ table {
   table-layout: fixed;
 }
 
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
 tbody tr {
   border-bottom: 10px solid transparent;
 }
@@ -272,8 +279,27 @@ tbody tr td {
   padding: 8px;
 }
 
+td {
+  word-break: break-word;
+}
+
 tbody tr:nth-child(1n) {
   border-bottom: 2px solid #ddd;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  width: 80px;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 160px;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+  width: 120px;
 }
 
 .row-overdue {

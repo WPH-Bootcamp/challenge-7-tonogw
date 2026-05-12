@@ -44,6 +44,24 @@ export class TodoService {
     this.todos.push(todo);
   }
 
+  update(
+    id: string,
+    updates: {
+      title: string;
+      description: string;
+      deadline?: string | null;
+    },
+  ): void {
+    const todo = this.todos.find((t) => t.id === id);
+
+    if (!todo) {
+      throw new Error("Todo not found");
+    }
+
+    todo.title = updates.title;
+    todo.description = updates.description;
+    todo.deadline = updates.deadline;
+  }
   //   delete(id: string): void {
   //     const todos = this.todos.find((t) => t.id !== id);
   //   }

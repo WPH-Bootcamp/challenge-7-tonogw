@@ -126,6 +126,7 @@ const el = {
 const description = (el.descInput as HTMLTextAreaElement).value.trim();
 
 let userName = getUserName();
+let editTodoId: string | null = null;
 
 // function init(): void {
 //   bindEvents();
@@ -170,7 +171,7 @@ function renderUser(): void {
         return;
       }
 
-      setUserName(clickDefaultUser.trim());
+      setUserName(replaceGuest.trim());
       renderUser();
     };
   } else {
@@ -191,7 +192,7 @@ function bindEvents(): void {
   el.startBtn?.addEventListener("click", () => {
     showMain();
 
-    if (userName === "Guest") {
+    if (getUserName() === DEFAULT_USER) {
       const clickDefaultUser = prompt("Please input your name: ");
 
       if (clickDefaultUser && clickDefaultUser.trim()) {
@@ -200,6 +201,9 @@ function bindEvents(): void {
     }
     renderUser();
   });
+
+  // HINT TO CHANGE GUEST INTO USER NAME
+  el.userName?.setAttribute("title", "Click to change your name");
 
   // EXIT BUTTON TO SIGN OUT FROM TODO APP
   el.exitBtn?.addEventListener("click", () => {
@@ -234,18 +238,37 @@ function bindEvents(): void {
 
     const deadline = (el.dateInput as HTMLInputElement).value.trim();
 
+    const todo = {
+      id: generateUniqueId(),
+      title,
+      description,
+      completed: false,
+      deadline,
+      createdAt: new Date().toISOString(),
+    };
+
     if (!title) {
       alert("Title is required");
       return;
     }
 
-    service.add({
-      id: generateUniqueId(),
-      title,
-      description,
-      deadline,
-      completed: false,
-    });
+    if (editTodoId) {
+      service.update(editTodoId, {
+        title,
+        description,
+        deadline,
+      });
+    } else {
+      service.add(todo);
+    }
+
+    // service.add({
+    //   id: generateUniqueId(),
+    //   title,
+    //   description,
+    //   deadline,
+    //   completed: false,
+    // });
 
     saveTodos(service.getAll());
     renderTodos(service);
@@ -273,12 +296,37 @@ function showCover(): void {
 }
 
 // FORM TO INPUT OR ADD TODO/ TASK
+// function openAddForm(): void {
+//   el.formTitle!.textContent = "Add Task";
+
+//   (el.titleInput as HTMLInputElement).value = "";
+//   (el.descInput as HTMLInputElement).value = "";
+//   (el.dateInput as HTMLInputElement).value = "";
+
+//   el.inputPage?.classList.remove("hidden");
+// }
+
+// SWITCH FORM ADD OR EDIT
 function openAddForm(): void {
+  editTodoId = null;
+
   el.formTitle!.textContent = "Add Task";
 
   (el.titleInput as HTMLInputElement).value = "";
-  (el.descInput as HTMLInputElement).value = "";
+  (el.descInput as HTMLTextAreaElement).value = "";
   (el.dateInput as HTMLInputElement).value = "";
+
+  el.inputPage?.classList.remove("hidden");
+}
+
+function openEditForm(todo: Todo): void {
+  editTodoId = todo.id;
+
+  el.formTitle!.textContent = "Edit Task";
+
+  (el.titleInput as HTMLInputElement).value = todo.title;
+  (el.descInput as HTMLTextAreaElement).value = todo.description;
+  (el.dateInput as HTMLInputElement).value = todo.deadline || "";
 
   el.inputPage?.classList.remove("hidden");
 }
@@ -342,6 +390,12 @@ export function renderTodos(service: TodoService) {
     const tdTitle = document.createElement("td");
     tdTitle.textContent = todo.title;
 
+    const tdDesc = document.createElement("td");
+    tdDesc.textContent = todo.description;
+
+    const tdDeadline = document.createElement("td");
+    tdDeadline.textContent = todo.deadline || "-";
+
     tdTitle.addEventListener("click", () => {
       service.toggle(todo.id);
       saveTodos(service.getAll());
@@ -352,46 +406,52 @@ export function renderTodos(service: TodoService) {
     tdStatus.textContent = getStatusLabel(todo);
 
     const tdAction = document.createElement("td");
-    const btn = document.createElement("button");
-    btn.textContent = "edit";
-    btn.textContent = "remove";
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
 
-    btn.onclick = () => {
+    editBtn.onclick = () => {
+      openEditForm(todo);
+    };
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "remove";
+
+    deleteBtn.onclick = () => {
       service.delete(todo.id);
       saveTodos(service.getAll());
       renderTodos(service);
     };
 
-    tdAction.appendChild(btn);
+    tdAction.append(editBtn, deleteBtn);
 
-    tr.append(tdId, tdTitle, tdStatus, tdAction);
+    tr.append(tdId, tdTitle, tdDesc, tdDeadline, tdStatus, tdAction);
     container.appendChild(tr);
   });
 }
 
-document.getElementById("save-task")!.addEventListener("click", () => {
-  const input = document.getElementById("todo-input") as HTMLInputElement;
-  const deadlineInput = document.getElementById(
-    "deadline-input",
-  ) as HTMLInputElement;
+// document.getElementById("save-task")!.addEventListener("click", () => {
+//   const input = document.getElementById("todo-input") as HTMLInputElement;
+//   const deadlineInput = document.getElementById(
+//     "deadline-input",
+//   ) as HTMLInputElement;
 
-  const title = input.value.trim();
+//   const title = input.value.trim();
 
-  if (!title) return;
+//   if (!title) return;
 
-  service.add({
-    id: generateUniqueId(),
-    title,
-    description: description,
-    completed: false,
-    deadline: deadlineInput.value || null,
-  });
+//   service.add({
+//     id: generateUniqueId(),
+//     title,
+//     description: description,
+//     completed: false,
+//     deadline: deadlineInput.value || null,
+//   });
 
-  saveTodos(service.getAll());
-  renderTodos(service);
+//   saveTodos(service.getAll());
+//   renderTodos(service);
 
-  input.value = "";
-  deadlineInput.value = "";
-});
+//   input.value = "";
+//   deadlineInput.value = "";
+// });
 
 init();

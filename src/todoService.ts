@@ -76,7 +76,7 @@ export class TodoService {
     todo.completed = !todo.completed;
   }
 
-  sortBy(field: sortField | "id" | "deadline" | "completed"): void {
+  sortBy(field: sortField | "id" | "title" | "deadline" | "completed"): void {
     this.todos.sort((a, b) => {
       // SORT BY UNIQ ID
       if (field === "id") {

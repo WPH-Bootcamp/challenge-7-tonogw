@@ -240,6 +240,7 @@ body {
   border: 1px solid orange;
 }
 
+/* TODO LIST CONTENT INSIDE FRAME FOR END USER VERTICAL SCROLL */
 .table-container {
   width: 100%;
   max-height: 400px;

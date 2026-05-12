@@ -25,7 +25,8 @@ export function isTodo(value: unknown): value is Todo {
     typeof todo.id === "string" &&
     typeof todo.title === "string" &&
     typeof todo.description === "string" &&
-    typeof todo.completed === "boolean"
+    typeof todo.completed === "boolean" &&
+    typeof todo.deadline === "string"
   );
 }
 

@@ -42,7 +42,7 @@ const service = new TodoService(loadTodos());
 const USER_KEY = "userName";
 const DEFAULT_USER = "Guest";
 
-// API FETCH GET 7 POST
+// API FETCH GET & POST
 const GET = "https://my-json-server.typicode.com/tonogw/todo-api/v1_todos";
 const POST = "https://jsonplaceholder.typicode.com/posts";
 
@@ -89,22 +89,38 @@ export async function postTodoToAPI(todo: Todo): Promise<void> {
 
 // DOM ELEMENT
 const el = {
-  sortTitle: document.getElementById("sort-title"),
-  startBtn: document.getElementById("start-btn"),
+  // COVER PAGE
   coverPage: document.getElementById("page-cover"),
-  mainPage: document.getElementById("page-main"),
-  inputPage: document.getElementById("page-input"),
-  openBtn: document.getElementById("page-input-open"),
-  saveBtn: document.getElementById("save-task"),
-  cancelBtn: document.getElementById("page-input-cancel-btn"),
-  exitBtn: document.getElementById("exit-lbl"),
-  list: document.getElementById("todo-list"),
-  userName: document.getElementById("user-name"),
+  startBtn: document.getElementById("start-btn"),
 
+  // MAIN PAGE
+  exitBtn: document.getElementById("exit-lbl"),
+  mainPage: document.getElementById("page-main"),
+  userName: document.getElementById("user-name"),
+  openBtn: document.getElementById("page-input-open"),
+
+  // TABEL TODO LIST
+  list: document.getElementById("todo-list"),
+  sortId: document.getElementById("sort-id"),
+  sortTitle: document.getElementById("sort-title"),
+
+  // FORM PAGE TITLE TO TOGGLE ADD OR EDIT
+  formTitle: document.querySelector(".page-input-content h2"),
   titleInput: document.getElementById("page-input-content-title"),
+
+  // FORM INPUT
+  inputPage: document.getElementById("page-input"),
   descInput: document.getElementById("page-input-desc"),
   dateInput: document.getElementById("page-input-date-input"),
-  formTitle: document.querySelector(".page-input-content h2"),
+  saveBtn: document.getElementById("save-task"),
+  cancelBtn: document.getElementById("page-input-cancel-btn"),
+
+  // FORM EDIT
+  editPage: document.getElementById("page-edit"),
+  editFieldDesc: document.getElementById("edit-field"),
+  editFieldDate: document.getElementById("edit-field"),
+  saveEditBtn: document.getElementById("update-task"),
+  cancelEditBtn: document.getElementById("cancel-edit"),
 };
 
 const description = (el.descInput as HTMLTextAreaElement).value.trim();
@@ -200,6 +216,11 @@ function bindEvents(): void {
     closeForm();
   });
 
+  el.sortId?.addEventListener("click", () => {
+    service.sortBy("id");
+    renderTodos(service);
+  });
+
   el.sortTitle?.addEventListener("click", () => {
     service.sortBy("title");
     renderTodos(service);
@@ -277,19 +298,21 @@ function closeForm(): void {
 
 // function sortTodos(
 //     field:
+//     | "id"
 //     | "title"
 //     | "description"
 //     | "deadline"
 //     | "completed",
 // )
+
 // function sortTodos(field: string): void {
-//   service.sortBy(field);
+//   // service.sortBy(field);
 
-//   renderTodos(service);
-// }
-// const el = document();
+//   // renderTodos(service);
 
-// sortBy(field) {
+//   // const el = document();
+
+//   service.sortBy(field); void {
 //     this.todos.sort((a, b) => {
 //       if (field === "deadline") {
 //         return new Date(a.deadline || 0) - new Date(b.deadline || 0);
@@ -313,6 +336,9 @@ export function renderTodos(service: TodoService) {
   todos.forEach((todo) => {
     const tr = document.createElement("tr");
 
+    const tdId = document.createElement("td");
+    tdId.textContent = todo.id;
+
     const tdTitle = document.createElement("td");
     tdTitle.textContent = todo.title;
 
@@ -327,6 +353,7 @@ export function renderTodos(service: TodoService) {
 
     const tdAction = document.createElement("td");
     const btn = document.createElement("button");
+    btn.textContent = "edit";
     btn.textContent = "remove";
 
     btn.onclick = () => {
@@ -337,7 +364,7 @@ export function renderTodos(service: TodoService) {
 
     tdAction.appendChild(btn);
 
-    tr.append(tdTitle, tdStatus, tdAction);
+    tr.append(tdId, tdTitle, tdStatus, tdAction);
     container.appendChild(tr);
   });
 }

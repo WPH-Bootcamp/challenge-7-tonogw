@@ -11,17 +11,38 @@ body {
   background: gray;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   body {
     font-size: 14px;
   }
+
+  .container {
+    width: 100%;
+    padding: 8px;
+  }
+
+  .page-main-navbar {
+    width: 100%;
+  }
+
+  .img-navbar-profile {
+    width: 40px;
+    height: 40px;
+  }
+
   table {
     font-size: 12px;
   }
+
   button {
     font-size: 12px;
-    padding: 4px;
+    padding: 4px 8px;
   }
+}
+
+.search-input,
+.page-input-open-btn {
+  width: 100%;
 }
 
 .app-name {
@@ -51,23 +72,31 @@ body {
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  max-width: 100%;
+  /* align-items: center; */
+  width: 100%;
   padding: 16px;
 }
 
 .page-main-navbar {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   background: white;
   border-radius: 6px;
+  padding: 12px;
 }
 
 .profile-left {
   display: flex;
   align-items: center;
   gap: 10px;
+  /* flex: 1; */
+  flex-shrink: 0;
+  /* min-width: 20px; */
 }
 
 .user-name {
@@ -76,10 +105,11 @@ body {
 
 .profile-right {
   background: rgb(201, 201, 201);
-  margin: 20px;
+  margin: 0;
   font-weight: 900;
   padding: 5px;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .profile-right:hover {
@@ -98,6 +128,7 @@ body {
 .img-navbar-profile {
   width: 50px;
   height: 50px;
+  margin-left: 20px;
 }
 
 .form {
@@ -132,6 +163,30 @@ body {
 .row {
   display: flex;
   gap: 5px;
+}
+
+.toolbar {
+  width: 100%;
+  max-width: 1100px;
+
+  display: flex;
+  gap: 10px;
+
+  align-items: center;
+  margin: 12px auto;
+}
+
+.search-input {
+  flex: 1;
+
+  height: 50px;
+
+  border: 1px solid grey;
+  border-radius: 6px;
+
+  padding: 0 12px;
+
+  font-size: 14px;
 }
 
 .page-input-date-input,
@@ -169,7 +224,7 @@ body {
 
 .row button,
 .page-input-open-btn {
-  flex: 1;
+  flex: 0 0 80px;
   height: 50px;
   background: orange;
   border: none;
@@ -243,6 +298,8 @@ body {
 /* TODO LIST CONTENT INSIDE FRAME FOR END USER VERTICAL SCROLL */
 .table-container {
   width: 100%;
+  /* max-width: 900px; */
+  /* margin: 16px auto; */
   max-height: 400px;
   overflow-x: auto;
   overflow-y: auto;
@@ -254,18 +311,51 @@ body {
 thead th {
   height: 50px;
   position: sticky;
+  text-align: center;
   top: 0;
   background: rgb(255, 242, 177);
+  cursor: pointer;
+}
+
+thead th[data-tooltip] {
+  position: sticky;
+  overflow: visible;
+}
+
+thead th[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+
+  position: absolute;
+  top: 25px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: black;
+  color: white;
+
+  font-size: 12px;
+
+  padding: 6px 10px;
+  border-radius: 4px;
+
+  white-space: nowrap;
+
+  z-index: 9999;
 }
 
 table {
-  width: 100%;
+  width: max-content;
   border-collapse: collapse;
-  table-layout: fixed;
+  /* table-layout: fixed; */
+  min-width: 100%;
+  /* margin: 0 auto; */
 }
 
 th,
 td {
+  /* word-break: break-word; */
+  /* overflow-wrap: break-word;*/
   padding: 8px;
   text-align: left;
   vertical-align: top;
@@ -280,6 +370,9 @@ tbody tr td {
 }
 
 td {
+  white-space: normal;
+  padding: 8px;
+  text-align: left;
   word-break: break-word;
 }
 
@@ -289,12 +382,27 @@ tbody tr:nth-child(1n) {
 
 th:nth-child(1),
 td:nth-child(1) {
-  width: 80px;
+  width: 70px;
 }
 
 th:nth-child(2),
 td:nth-child(2) {
-  width: 160px;
+  width: 150px;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 220px;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 120px;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  width: 60px;
 }
 
 th:nth-child(6),
@@ -353,8 +461,16 @@ td:nth-child(6) {
 }
 
 .footer {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
+  position: fixed;
+
+  bottom: 20px;
+  left: 50%;
+
+  transform: translateX(-50%);
+  z-index: 100;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* margin-top: 30px; */
   text-align: center;
+  white-space: nowrap;
 }

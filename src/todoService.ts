@@ -25,6 +25,7 @@
 
 import { Todo, TodoStatus, sortField } from "./types.js";
 import { saveTodos, loadTodos } from "./storage.js";
+import { Result } from "postcss";
 
 export class TodoService {
   //   private todos: Todo[] = [];
@@ -37,6 +38,10 @@ export class TodoService {
   // SHOW ALL TO DO LIST
   getAll(): Todo[] {
     return this.todos;
+  }
+
+  setTodos(todos: Todo[]): void {
+    this.todos = todos;
   }
 
   //   ADD OR INSERT NEW TODO
@@ -94,27 +99,35 @@ export class TodoService {
     todo.completed = !todo.completed;
   }
 
-  sortBy(field: sortField | "id" | "title" | "deadline" | "completed"): void {
-    this.todos.sort((a, b) => {
+  // sortBy(field: sortField | "id" | "title" | "deadline" | "completed"): void {
+  sortBy(field: sortField, asc = true): void {
+    this.todos.sort((a, b): number => {
+      let result: number = 0;
       // SORT BY UNIQ ID
+      // if (field === "id") {
+      //   return a.id.localeCompare(b.id);
+      // }
       if (field === "id") {
-        return a.id.localeCompare(b.id);
+        result = Number(a.id) - Number(b.id);
       }
 
       // SORT BY TITLE
       if (field === "title") {
-        return a.title.localeCompare(b.title);
+        result = a.title.localeCompare(b.title);
       }
 
       // SORT BY END DATE
       if (field === "deadline") {
-        return (
-          new Date(a.deadline || 0).getTime() -
-          new Date(b.deadline || 0).getTime()
-        );
+        result =
+          // new Date(a.deadline || "-").getTime() -
+          // new Date(b.deadline || "-").getTime(),
+          (a.deadline || "-").localeCompare(b.deadline || "-");
       }
 
-      return Number(a.completed) - Number(b.completed);
+      if (field === "completed") {
+        result = Number(a.completed) - Number(b.completed);
+      }
+      return asc ? result : -result;
     });
   }
 }

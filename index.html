@@ -103,32 +103,38 @@
           </div>
         </div>
 
-        <!-- Button pop up window to add new task -->
-        <button id="page-input-open" class="page-input-open-btn">
-          + Add Task
-        </button>
+        <!-- Button pop up window to add new and Search todo -->
+        <div class="toolbar">
+          <button id="page-input-open" class="page-input-open-btn">
+            + Add Task
+          </button>
+          <input
+            id="search-input"
+            type="text"
+            class="search-input"
+            placeholder="Search todo ..."
+          />
+        </div>
 
         <!-- Table window to scroll vertically -->
         <div id="page-main-table" class="table-container">
-          <div class="table">
-            <table>
-              <thead>
-                <tr>
-                  <th id="sort-id" onclick="sortTodos('id')">No</th>
-                  <th id="sort-title" onclick="sortTodos('title')">
-                    Task name
-                  </th>
-                  <th>Description</th>
-                  <th onclick="sortTodos('deadline')">Deadline</th>
-                  <th onclick="sortTodos('completed')">Status</th>
+          <!-- <div class="table"> -->
+          <table>
+            <thead>
+              <tr>
+                <th id="sort-id">No</th>
+                <th id="sort-title">Task name</th>
+                <th>Description</th>
+                <th id="sort-deadline">Deadline</th>
+                <th id="sort-status">Status</th>
 
-                  <th>Action</th>
-                </tr>
-              </thead>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-              <tbody id="todo-list" class="todo-container"></tbody>
-            </table>
-          </div>
+            <tbody id="todo-list" class="todo-container"></tbody>
+          </table>
+          <!-- </div> -->
         </div>
       </div>
 

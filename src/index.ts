@@ -23,18 +23,10 @@
 console.log("Welcome to TypeScript To-Do App!");
 console.log("Start building your app here...");
 
-// import { document } from "postcss";
-// import { renderTodos } from "./dom";
-import { loadTodos, saveTodos } from "./storage.js";
-import { TodoService } from "./todoService.js";
-// import { renderTodos } from "./dom";
-import { generateUniqueId } from "./utils.js";
-// import { document } from "postcss";
-// import { TodoService } from "./todoService";
-// import { saveTodos } from "./storage";
-import { getStatusLabel } from "./utils.js";
-// import { document } from "postcss";
 import { sortField, Todo, TodoStatus } from "./types.js";
+import { generateUniqueId, getStatusLabel } from "./utils.js";
+import { TodoService } from "./todoService.js";
+import { loadTodos, saveTodos } from "./storage.js";
 
 const service = new TodoService(loadTodos());
 
@@ -103,12 +95,15 @@ const el = {
   list: document.getElementById("todo-list"),
   sortId: document.getElementById("sort-id"),
   sortTitle: document.getElementById("sort-title"),
+  sortDeadline: document.getElementById("sort-deadline"),
+  sortStatus: document.getElementById("sort-status"),
 
   // FORM PAGE TITLE TO TOGGLE ADD OR EDIT
   formTitle: document.querySelector(".page-input-content h2"),
   titleInput: document.getElementById("page-input-content-title"),
 
   // FORM INPUT
+  searchInput: document.getElementById("search-input"),
   inputPage: document.getElementById("page-input"),
   descInput: document.getElementById("page-input-desc"),
   dateInput: document.getElementById("page-input-date-input"),
@@ -128,12 +123,6 @@ const description = (el.descInput as HTMLTextAreaElement).value.trim();
 let userName = getUserName();
 let editTodoId: string | null = null;
 
-// function init(): void {
-//   bindEvents();
-//   renderUser();
-//   renderTodos(service);
-// }
-
 // INITIALIZATION APP
 async function init() {
   let todos = loadTodos();
@@ -144,7 +133,7 @@ async function init() {
     saveTodos(todos);
   }
 
-  service.getAll();
+  service.setTodos(todos);
 
   bindEvents();
   renderUser();
@@ -163,6 +152,8 @@ function renderUser(): void {
 
   if (clickDefaultUser === DEFAULT_USER) {
     el.userName.style.cursor = "pointer";
+    el.userName.classList.add("profile-btn");
+    // el.userName.style.color = "blue";
 
     el.userName.onclick = () => {
       const replaceGuest = prompt("Input your name to replace Guest");
@@ -175,7 +166,8 @@ function renderUser(): void {
       renderUser();
     };
   } else {
-    el.userName.style.cursor = "default";
+    el.userName.classList.remove("profile-btn");
+    // el.userName.style.cursor = "default";
     el.userName.onclick = null;
   }
 }
@@ -187,6 +179,13 @@ function setUserName(name: string): void {
 function getUserName(): string {
   return localStorage.getItem(USER_KEY) || DEFAULT_USER;
 }
+
+let sortWay = {
+  id: true,
+  title: true,
+  deadline: true,
+  completed: true,
+};
 
 function bindEvents(): void {
   el.startBtn?.addEventListener("click", () => {
@@ -220,13 +219,37 @@ function bindEvents(): void {
     closeForm();
   });
 
+  el.searchInput?.addEventListener("input", () => {
+    const searchKey = (el.searchInput as HTMLInputElement).value.toLowerCase();
+
+    renderTodos(service, searchKey);
+  });
+
+  el.sortId?.setAttribute("data-tooltip", "A-Z | Z-A");
   el.sortId?.addEventListener("click", () => {
-    service.sortBy("id");
+    service.sortBy("id", sortWay.id);
+    sortWay.id = !sortWay.id;
     renderTodos(service);
   });
 
+  el.sortTitle?.setAttribute("data-tooltip", "Sort A-Z | Z-A");
   el.sortTitle?.addEventListener("click", () => {
-    service.sortBy("title");
+    service.sortBy("title", sortWay.title);
+    sortWay.title = !sortWay.title;
+    renderTodos(service);
+  });
+
+  el.sortDeadline?.setAttribute("data-tooltip", "Sort A-Z | Z-A");
+  el.sortDeadline?.addEventListener("click", () => {
+    service.sortBy("deadline", sortWay.deadline);
+    sortWay.deadline = !sortWay.deadline;
+    renderTodos(service);
+  });
+
+  el.sortStatus?.setAttribute("data-tooltip", "A-Z | Z-A");
+  el.sortStatus?.addEventListener("click", () => {
+    service.sortBy("completed", sortWay.completed);
+    sortWay.completed = !sortWay.completed;
     renderTodos(service);
   });
 
@@ -234,7 +257,7 @@ function bindEvents(): void {
   el.saveBtn?.addEventListener("click", () => {
     const title = (el.titleInput as HTMLInputElement).value.trim();
 
-    const description = (el.descInput as HTMLInputElement).value.trim();
+    const description = (el.descInput as HTMLTextAreaElement).value.trim();
 
     const deadline = (el.dateInput as HTMLInputElement).value.trim();
 
@@ -262,14 +285,6 @@ function bindEvents(): void {
       service.add(todo);
     }
 
-    // service.add({
-    //   id: generateUniqueId(),
-    //   title,
-    //   description,
-    //   deadline,
-    //   completed: false,
-    // });
-
     saveTodos(service.getAll());
     renderTodos(service);
 
@@ -282,9 +297,6 @@ function bindEvents(): void {
 
 // SHOW MAIN PAGE DISPLAY SCREEN
 function showMain(): void {
-  // el.mainPage!.classList = "cancel-edit";
-  el.mainPage!.classList = "form";
-  // el.mainPage!.classList = "page-input-cancel-btn";
   el.coverPage?.classList.add("hidden");
   el.mainPage?.classList.remove("hidden");
 }
@@ -294,17 +306,6 @@ function showCover(): void {
   el.coverPage?.classList.remove("hidden");
   el.mainPage?.classList.add("hidden");
 }
-
-// FORM TO INPUT OR ADD TODO/ TASK
-// function openAddForm(): void {
-//   el.formTitle!.textContent = "Add Task";
-
-//   (el.titleInput as HTMLInputElement).value = "";
-//   (el.descInput as HTMLInputElement).value = "";
-//   (el.dateInput as HTMLInputElement).value = "";
-
-//   el.inputPage?.classList.remove("hidden");
-// }
 
 // SWITCH FORM ADD OR EDIT
 function openAddForm(): void {
@@ -339,82 +340,77 @@ function closeForm(): void {
   // el.mainPage?.classList.remove("hidden");
 }
 
-// // SAVE TODO
-// function saveTodos(): void {
-
-// }
-
-// function sortTodos(
-//     field:
-//     | "id"
-//     | "title"
-//     | "description"
-//     | "deadline"
-//     | "completed",
-// )
-
-// function sortTodos(field: string): void {
-//   // service.sortBy(field);
-
-//   // renderTodos(service);
-
-//   // const el = document();
-
-//   service.sortBy(field); void {
-//     this.todos.sort((a, b) => {
-//       if (field === "deadline") {
-//         return new Date(a.deadline || 0) - new Date(b.deadline || 0);
-//       }
-//       if (field === "title") {
-//         return a.title.localeCompare(b.title);
-//       }
-//       if (field === "completed") {
-//         return Number(a.completed) - Number(b.completed);
-//       }
-//     });
-//   }
-// }
-
-export function renderTodos(service: TodoService) {
+export function renderTodos(service: TodoService, searchKey = "") {
   const container = document.getElementById("todo-list")!;
   container.innerHTML = "";
 
-  const todos = service.getAll();
+  const todos: Todo[] = service
+    .getAll()
+    .filter(
+      (todo: Todo) =>
+        todo.title.toLowerCase().includes(searchKey) ||
+        todo.description.toLowerCase().includes(searchKey),
+    );
 
   todos.forEach((todo) => {
     const tr = document.createElement("tr");
 
     const tdId = document.createElement("td");
+    tdId.setAttribute("data-label", "No");
     tdId.textContent = todo.id;
 
     const tdTitle = document.createElement("td");
+    tdTitle.setAttribute("data-label", "Task Name");
     tdTitle.textContent = todo.title;
 
     const tdDesc = document.createElement("td");
+    tdDesc.setAttribute("data-label", "Description");
     tdDesc.textContent = todo.description;
 
     const tdDeadline = document.createElement("td");
-    tdDeadline.textContent = todo.deadline || "-";
+    tdDeadline.setAttribute("data-label", "Deadline");
+    tdDeadline.style.textAlign = "center";
 
-    tdTitle.addEventListener("click", () => {
-      service.toggle(todo.id);
-      saveTodos(service.getAll());
-      renderTodos(service);
-    });
+    // tdDeadline.textContent = todo.deadline || "-";
+    if (todo.deadline) {
+      const [date, time] = todo.deadline.split("T");
+
+      tdDeadline.innerHTML = `
+      ${date}<br>
+      ${time.slice(0, 5)}
+      `;
+    } else {
+      tdDeadline.textContent = "-";
+    }
 
     const tdStatus = document.createElement("td");
+    tdStatus.setAttribute("data-label", "Status");
     tdStatus.textContent = getStatusLabel(todo);
 
     const tdAction = document.createElement("td");
     const editBtn = document.createElement("button");
     editBtn.textContent = "Edit";
 
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+
+    const toggleTodo = () => {
+      service.toggle(todo.id);
+      saveTodos(service.getAll());
+      renderTodos(service);
+    };
+
+    tdTitle.addEventListener("click", toggleTodo);
+    tdTitle.style.cursor = "pointer";
+    tdTitle.title = "Click to toggle ACTIVE / DONE";
+
+    tdStatus.addEventListener("click", toggleTodo);
+    tdStatus.style.cursor = "pointer";
+    tdStatus.title = "Click to toggle ACTIVE / DONE";
+
     editBtn.onclick = () => {
       openEditForm(todo);
     };
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "remove";
 
     deleteBtn.onclick = () => {
       service.delete(todo.id);
@@ -422,36 +418,18 @@ export function renderTodos(service: TodoService) {
       renderTodos(service);
     };
 
+    if (todo.completed) {
+      tr.classList.add("row-completed");
+    } else if (todo.deadline && new Date(todo.deadline) < new Date()) {
+      tr.classList.add("row-overdue");
+    }
+
     tdAction.append(editBtn, deleteBtn);
 
     tr.append(tdId, tdTitle, tdDesc, tdDeadline, tdStatus, tdAction);
+
     container.appendChild(tr);
   });
 }
-
-// document.getElementById("save-task")!.addEventListener("click", () => {
-//   const input = document.getElementById("todo-input") as HTMLInputElement;
-//   const deadlineInput = document.getElementById(
-//     "deadline-input",
-//   ) as HTMLInputElement;
-
-//   const title = input.value.trim();
-
-//   if (!title) return;
-
-//   service.add({
-//     id: generateUniqueId(),
-//     title,
-//     description: description,
-//     completed: false,
-//     deadline: deadlineInput.value || null,
-//   });
-
-//   saveTodos(service.getAll());
-//   renderTodos(service);
-
-//   input.value = "";
-//   deadlineInput.value = "";
-// });
 
 init();

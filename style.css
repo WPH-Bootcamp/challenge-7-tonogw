@@ -128,7 +128,7 @@ body {
 .img-navbar-profile {
   width: 50px;
   height: 50px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .form {
@@ -224,7 +224,7 @@ body {
 
 .row button,
 .page-input-open-btn {
-  flex: 0 0 80px;
+  flex: 0 0 90px;
   height: 50px;
   background: orange;
   border: none;

@@ -109,6 +109,7 @@ const el = {
   dateInput: document.getElementById("page-input-date-input"),
   saveBtn: document.getElementById("save-task"),
   cancelBtn: document.getElementById("page-input-cancel-btn"),
+  deleteBtn: document.getElementById("delete-btn"),
 
   // FORM EDIT
   editPage: document.getElementById("page-edit"),
@@ -205,6 +206,7 @@ function bindEvents(): void {
   el.userName?.setAttribute("title", "Click to change your name");
 
   // EXIT BUTTON TO SIGN OUT FROM TODO APP
+  el.exitBtn?.setAttribute("tooltip", "Logout");
   el.exitBtn?.addEventListener("click", () => {
     showCover();
   });
@@ -218,6 +220,9 @@ function bindEvents(): void {
   el.cancelBtn?.addEventListener("click", () => {
     closeForm();
   });
+
+  // // DELETE BUTTON ON TODO LIST
+  // el.deleteBtn?.classList.value("delete-btn");
 
   el.searchInput?.addEventListener("input", () => {
     const searchKey = (el.searchInput as HTMLInputElement).value.toLowerCase();
@@ -390,9 +395,11 @@ export function renderTodos(service: TodoService, searchKey = "") {
     const tdAction = document.createElement("td");
     const editBtn = document.createElement("button");
     editBtn.textContent = "Edit";
+    editBtn.className = "edit-btn";
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
+    deleteBtn.className = "delete-btn";
 
     const toggleTodo = () => {
       service.toggle(todo.id);

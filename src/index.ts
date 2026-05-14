@@ -441,7 +441,10 @@ export function renderTodos(service: TodoService, searchKey = "") {
       tr.classList.add("row-overdue");
     }
 
-    tdAction.append(editBtn, deleteBtn);
+    if (!todo.completed) {
+      tdAction.append(editBtn);
+    }
+    tdAction.append(deleteBtn);
 
     tr.append(tdId, tdTitle, tdDesc, tdDeadline, tdStatus, tdAction);
 

@@ -11,6 +11,17 @@ body {
   background: gray;
 }
 
+.app-wrapper {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 @media (max-width: 768px) {
   body {
     font-size: 14px;
@@ -79,7 +90,7 @@ body {
 
 .page-main-navbar {
   width: 100%;
-  max-width: 900px;
+  /* max-width: 900px; */
   margin: 0 auto;
   display: flex;
   flex-direction: row;
@@ -94,16 +105,25 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  /* flex: 1; */
-  flex-shrink: 0;
-  /* min-width: 20px; */
+  flex: 1;
+  /* flex-shrink: 0; */
+  min-width: 0;
+}
+
+.navbar-user {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: clamp(18px, 4vw, 36px);
 }
 
 .user-name {
   color: red;
 }
 
-.profile-right {
+.exit-lbl {
   background: rgb(201, 201, 201);
   margin: 0;
   font-weight: 900;
@@ -112,12 +132,63 @@ body {
   flex-shrink: 0;
 }
 
-.profile-right:hover {
+.exit-lbl:hover {
   cursor: pointer;
   background: black;
   color: white;
   border: 2px solid grey;
   padding: 3px;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  flex-shrink: 0;
+}
+
+/* HELP BUTTON ICON */
+.help-btn {
+  position: relative;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 700;
+  color: steelblue;
+}
+
+.help-btn:hover {
+  color: royalblue;
+}
+
+.help-btn::after {
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.15s;
+}
+
+/* APPLICATION QUICK GUIDE OTHER THAN SELF EXPLANATORY */
+.help-btn:hover::after {
+  content: "Quick Guide:\A\A" "• Click Guest to set your name (one time only)\A"
+    "• Hover sortable column headers for A–Z or Z–A sorting\A"
+    "• Click task title or status to toggle ACTIVE / DONE\A"
+    "• Use search to locate tasks instantly\A\A"
+    "Simple, intuitive, and efficient task management.";
+
+  white-space: pre-line;
+  position: absolute;
+  top: 130%;
+  right: 0;
+  width: 280px;
+  padding: 14px;
+  border-radius: 8px;
+  background: black;
+  color: white;
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 2000;
+  opacity: 1;
 }
 
 .img-icon {
@@ -167,7 +238,7 @@ body {
 
 .toolbar {
   width: 100%;
-  max-width: 1100px;
+  /* max-width: 1100px; */
 
   display: flex;
   gap: 10px;
@@ -231,7 +302,7 @@ body {
   border-radius: 6px;
   font-weight: 800;
   cursor: pointer;
-  gap: 20px;
+  gap: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -402,7 +473,7 @@ td:nth-child(4) {
 
 th:nth-child(5),
 td:nth-child(5) {
-  width: 60px;
+  width: 75px;
 }
 
 th:nth-child(6),
@@ -419,9 +490,9 @@ td:nth-child(6) {
   text-decoration: line-through;
 }
 
-.row-table {
+/* .row-table {
   display: flex;
-}
+} */
 
 .page-input {
   position: fixed;

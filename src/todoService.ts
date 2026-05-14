@@ -23,9 +23,7 @@
 
 // TODO: Buat fungsi untuk mencari To-Do berdasarkan keyword
 
-import { Todo, TodoStatus, sortField } from "./types.js";
-import { saveTodos, loadTodos } from "./storage.js";
-import { Result } from "postcss";
+import { Todo, sortField } from "./types.js";
 
 export class TodoService {
   //   private todos: Todo[] = [];

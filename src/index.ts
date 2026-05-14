@@ -23,7 +23,7 @@
 console.log("Welcome to TypeScript To-Do App!");
 console.log("Start building your app here...");
 
-import { sortField, Todo, TodoStatus } from "./types.js";
+import { Todo } from "./types.js";
 import { generateUniqueId, getStatusLabel } from "./utils.js";
 import { TodoService } from "./todoService.js";
 import { loadTodos, saveTodos } from "./storage.js";
@@ -35,12 +35,14 @@ const USER_KEY = "userName";
 const DEFAULT_USER = "Guest";
 
 // API FETCH GET & POST
-const GET = "https://my-json-server.typicode.com/tonogw/todo-api/v1_todos";
-const POST = "https://jsonplaceholder.typicode.com/posts";
+const GET_API_URL =
+  "https://my-json-server.typicode.com/tonogw/todo-api/v1_todos";
+// const POST_API_URL = "https://jsonplaceholder.typicode.com/posts";
+const POST_API_URL = "http://localhost:3000/todos";
 
 export async function getTodosFromAPI(): Promise<Todo[]> {
   try {
-    const res = await fetch(GET);
+    const res = await fetch(GET_API_URL);
 
     if (!res.ok) {
       throw new Error("Failed to fetch data");
@@ -65,7 +67,7 @@ export async function getTodosFromAPI(): Promise<Todo[]> {
 // POST DATA TO API
 export async function postTodoToAPI(todo: Todo): Promise<void> {
   try {
-    await fetch(POST, {
+    await fetch(POST_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -109,19 +111,19 @@ const el = {
   dateInput: document.getElementById("page-input-date-input"),
   saveBtn: document.getElementById("save-task"),
   cancelBtn: document.getElementById("page-input-cancel-btn"),
-  deleteBtn: document.getElementById("delete-btn"),
+  // deleteBtn: document.getElementById("delete-btn"),
 
   // FORM EDIT
-  editPage: document.getElementById("page-edit"),
-  editFieldDesc: document.getElementById("edit-field"),
-  editFieldDate: document.getElementById("edit-field"),
-  saveEditBtn: document.getElementById("update-task"),
-  cancelEditBtn: document.getElementById("cancel-edit"),
+  // editPage: document.getElementById("page-edit"),
+  // editFieldDesc: document.getElementById("edit-field"),
+  // editFieldDate: document.getElementById("edit-field"),
+  // saveEditBtn: document.getElementById("update-task"),
+  // cancelEditBtn: document.getElementById("cancel-edit"),
 };
 
-const description = (el.descInput as HTMLTextAreaElement).value.trim();
+// const description = (el.descInput as HTMLTextAreaElement).value.trim();
 
-let userName = getUserName();
+// let userName = getUserName();
 let editTodoId: string | null = null;
 
 // INITIALIZATION APP
@@ -168,7 +170,7 @@ function renderUser(): void {
     };
   } else {
     el.userName.classList.remove("profile-btn");
-    // el.userName.style.cursor = "default";
+    el.userName.style.cursor = "default";
     el.userName.onclick = null;
   }
 }
@@ -203,7 +205,11 @@ function bindEvents(): void {
   });
 
   // HINT TO CHANGE GUEST INTO USER NAME
-  el.userName?.setAttribute("title", "Click to change your name");
+  if (getUserName() === DEFAULT_USER) {
+    el.userName?.setAttribute("title", "Click to change your name");
+  } else {
+    // el.userName?.remove();
+  }
 
   // EXIT BUTTON TO SIGN OUT FROM TODO APP
   el.exitBtn?.setAttribute("tooltip", "Logout");
@@ -259,7 +265,7 @@ function bindEvents(): void {
   });
 
   // SAVE ADD TODO OR TASK
-  el.saveBtn?.addEventListener("click", () => {
+  el.saveBtn?.addEventListener("click", async () => {
     const title = (el.titleInput as HTMLInputElement).value.trim();
 
     const description = (el.descInput as HTMLTextAreaElement).value.trim();
@@ -267,12 +273,13 @@ function bindEvents(): void {
     const deadline = (el.dateInput as HTMLInputElement).value.trim();
 
     const todo = {
-      id: generateUniqueId(),
+      id: generateUniqueId(service.getAll()),
       title,
       description,
       completed: false,
       deadline,
-      createdAt: new Date().toISOString(),
+      // createdAt: new Date().toISOString(),
+      createdAt: new Date().toLocaleString(),
     };
 
     if (!title) {
@@ -288,15 +295,16 @@ function bindEvents(): void {
       });
     } else {
       service.add(todo);
+      await postTodoToAPI(todo);
     }
 
     saveTodos(service.getAll());
     renderTodos(service);
 
-    (((el.titleInput as HTMLInputElement).value = ""),
-      ((el.descInput as HTMLTextAreaElement).value = ""),
-      ((el.dateInput as HTMLInputElement).value = ""),
-      openAddForm());
+    (el.titleInput as HTMLInputElement).value = "";
+    (el.descInput as HTMLTextAreaElement).value = "";
+    (el.dateInput as HTMLInputElement).value = "";
+    closeForm();
   });
 }
 
@@ -316,7 +324,7 @@ function showCover(): void {
 function openAddForm(): void {
   editTodoId = null;
 
-  el.formTitle!.textContent = "Add Task";
+  el.formTitle!.textContent = "Add Todo";
 
   (el.titleInput as HTMLInputElement).value = "";
   (el.descInput as HTMLTextAreaElement).value = "";
@@ -328,7 +336,7 @@ function openAddForm(): void {
 function openEditForm(todo: Todo): void {
   editTodoId = todo.id;
 
-  el.formTitle!.textContent = "Edit Task";
+  el.formTitle!.textContent = "Edit Todo";
 
   (el.titleInput as HTMLInputElement).value = todo.title;
   (el.descInput as HTMLTextAreaElement).value = todo.description;
@@ -353,8 +361,10 @@ export function renderTodos(service: TodoService, searchKey = "") {
     .getAll()
     .filter(
       (todo: Todo) =>
+        todo.id.includes(searchKey) ||
         todo.title.toLowerCase().includes(searchKey) ||
-        todo.description.toLowerCase().includes(searchKey),
+        todo.description.toLowerCase().includes(searchKey) ||
+        todo.deadline?.includes(searchKey),
     );
 
   todos.forEach((todo) => {
@@ -382,7 +392,7 @@ export function renderTodos(service: TodoService, searchKey = "") {
 
       tdDeadline.innerHTML = `
       ${date}<br>
-      ${time.slice(0, 5)}
+      ${"@" + time.slice(0, 5)}
       `;
     } else {
       tdDeadline.textContent = "-";

@@ -13,14 +13,14 @@
 
 import { Todo } from "./types.js";
 
-const STORAGE_KEY = "todo-app-data";
+const TODO_STORAGE_KEY = "todos";
 
 export function saveTodos(todos: Todo[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  localStorage.setItem(TODO_STORAGE_KEY, JSON.stringify(todos));
 }
 
 export function loadTodos(): Todo[] {
-  const data = localStorage.getItem(STORAGE_KEY);
+  const data = localStorage.getItem(TODO_STORAGE_KEY);
   if (!data) return [];
 
   const parsed: unknown = JSON.parse(data);

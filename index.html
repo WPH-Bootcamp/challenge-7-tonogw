@@ -21,120 +21,123 @@
       </header>
 
       <div id="page-main" class="page-page hidden">
-        <div id="page-main-navbar" class="page-main-navbar">
-          <div class="profile-left">
-            <!-- Future enhancement editable picture profile -->
-            <img
-              class="img-navbar-profile"
-              src="./assets/check.png"
-              alt="profile picture"
-            />
-
-            <!-- Greetings to End User -->
-            <h2>Hallo, <span id="user-name"></span></h2>
-          </div>
-          <div class="profile-right">
-            <span id="exit-lbl" class="exit-lbl">X</span>
-          </div>
-        </div>
-
-        <!-- Pop up window to add new Task -->
-        <div id="page-input" class="page-input hidden">
-          <div class="page-input-content">
-            <h2>Add Task</h2>
-
-            <div class="form">
-              <label for="page-input-content-title">Task Name</label>
-              <input
-                id="page-input-content-title"
-                type="text"
-                placeholder="Input Task Name"
-                class="text-input-title"
+        <div class="app-wrapper">
+          <div id="page-main-navbar" class="page-main-navbar">
+            <div class="profile-left">
+              <!-- Future enhancement editable picture profile -->
+              <img
+                class="img-navbar-profile"
+                src="./assets/check.png"
+                alt="profile picture"
               />
 
-              <label for="page-input-desc">Description</label>
-              <textarea
-                id="page-input-desc"
-                class="task-detail"
-                name="task-detail"
-                placeholder="Input Task Detail"
-              ></textarea>
-
-              <label class="page-input-date-lbl" for="page-input-date-input"
-                >Deadline</label
-              >
-              <!-- To made date picker & add button on the same row -->
-              <div class="row">
-                <input
-                  id="page-input-date-input"
-                  type="datetime-local"
-                  class="page-input-date-input"
-                />
-                <button id="save-task">Add</button>
-              </div>
-
-              <!-- Button back to main page -->
-              <div class="page-input-actions">
-                <button
-                  id="page-input-cancel-btn"
-                  class="page-input-cancel-btn"
-                >
-                  Cancel
-                </button>
-              </div>
+              <!-- Greetings to End User -->
+              <h2 class="navbar-user">Hallo, <span id="user-name"></span></h2>
+            </div>
+            <div class="navbar-actions">
+              <span class="help-btn" data-tooltip="Quick Guide"> ⓘ </span>
+              <span id="exit-lbl" class="exit-lbl">X</span>
             </div>
           </div>
 
-          <!-- Pop up window to edit task -->
-          <div id="page-edit" class="page-input hidden">
+          <!-- Pop up window to add new Task -->
+          <div id="page-input" class="page-input hidden">
             <div class="page-input-content">
-              <h2></h2>
+              <h2>Add Todo</h2>
 
-              <select id="edit-field">
-                <option value="description">Description</option>
-                <option value="deadline">Deadline</option>
-              </select>
+              <div class="form">
+                <label for="page-input-content-title">Task Name</label>
+                <input
+                  id="page-input-content-title"
+                  type="text"
+                  placeholder="Input Task Name"
+                  class="text-input-title"
+                />
 
-              <input id="edit-input" type="text" />
+                <label for="page-input-desc">Description</label>
+                <textarea
+                  id="page-input-desc"
+                  class="task-detail"
+                  name="task-detail"
+                  placeholder="Input Task Detail"
+                ></textarea>
 
-              <button id="update-task">Update</button>
-              <button id="cancel-edit">Cancel</button>
+                <label class="page-input-date-lbl" for="page-input-date-input"
+                  >Deadline</label
+                >
+                <!-- To made date picker & add button on the same row -->
+                <div class="row">
+                  <input
+                    id="page-input-date-input"
+                    type="datetime-local"
+                    class="page-input-date-input"
+                  />
+                  <button id="save-task">Save</button>
+                </div>
+
+                <!-- Button back to main page -->
+                <div class="page-input-actions">
+                  <button
+                    id="page-input-cancel-btn"
+                    class="page-input-cancel-btn"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pop up window to edit task -->
+            <div id="page-edit" class="page-input hidden">
+              <div class="page-input-content">
+                <h2></h2>
+
+                <select id="edit-field">
+                  <option value="description">Description</option>
+                  <option value="deadline">Deadline</option>
+                </select>
+
+                <input id="edit-input" type="text" />
+
+                <button id="update-task">Update</button>
+                <button id="cancel-edit">Cancel</button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Button pop up window to add new and Search todo -->
-        <div class="toolbar">
-          <button id="page-input-open" class="page-input-open-btn">
-            + Add Task
-          </button>
-          <input
-            id="search-input"
-            type="text"
-            class="search-input"
-            placeholder="Search todo ..."
-          />
-        </div>
+          <!-- Button pop up window to add new and Search todo -->
+          <div class="toolbar">
+            <button id="page-input-open" class="page-input-open-btn">
+              + Add To-Do
+            </button>
+            <input
+              id="search-input"
+              type="text"
+              class="search-input"
+              placeholder="Search todo ..."
+            />
+          </div>
 
-        <!-- Table window to scroll vertically -->
-        <div id="page-main-table" class="table-container">
-          <!-- <div class="table"> -->
-          <table>
-            <thead>
-              <tr>
-                <th id="sort-id">No</th>
-                <th id="sort-title">Task name</th>
-                <th>Description</th>
-                <th id="sort-deadline">Deadline</th>
-                <th id="sort-status">Status</th>
+          <!-- Table window to scroll vertically -->
+          <div id="page-main-table" class="table-container">
+            <!-- <div class="table"> -->
+            <table>
+              <thead>
+                <tr>
+                  <th id="sort-id">No</th>
+                  <th id="sort-title">Task name</th>
+                  <th>Description</th>
+                  <th id="sort-deadline">Deadline</th>
+                  <th id="sort-status">Status</th>
 
-                <th>Action</th>
-              </tr>
-            </thead>
+                  <th>Action</th>
+                </tr>
+              </thead>
 
-            <tbody id="todo-list" class="todo-container"></tbody>
-          </table>
-          <!-- </div> -->
+              <tbody id="todo-list" class="todo-container"></tbody>
+            </table>
+            <!-- </div> -->
+          </div>
         </div>
       </div>
 

@@ -9,8 +9,6 @@
 
 // TODO: Buat tipe untuk fungsi-fungsi yang akan digunakan
 
-export type TodoStatus = "ACTIVE" | "DONE";
-
 export interface Todo {
   id: string;
   title: string;

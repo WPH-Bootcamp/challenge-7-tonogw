@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc --watch"
+    "watch": "tsc --watch",
+    "server": "json-server --watch db.json --port 3000"
   },
   "keywords": [
     "typescript",

@@ -8,7 +8,7 @@
 // TODO: Buat fungsi untuk memastikan input dari user adalah string yang valid
 
 // import { ftruncateSync } from "fs";
-import { Todo, TodoStatus } from "./types.js";
+import { Todo } from "./types.js";
 
 export function isTodo(value: unknown): value is Todo {
   if (typeof value !== "object") {
@@ -30,44 +30,51 @@ export function isTodo(value: unknown): value is Todo {
   );
 }
 
-// export function isTodoArray(value: unknown): value is Todo[] {
-//   return Array.isArray(value) && value.every(isTodo);
-// }
-
 export function isTodoArray(value: unknown): value is Todo[] {
   return Array.isArray(value) && value.every(isTodo);
 }
 
 let sequence = 0;
-let lastDayKey = "";
+let lastJulianDate = "";
 
-function getDayKey(date: Date): string {
+function getJulianDate(date: Date): string {
   const year = date.getFullYear().toString().slice(-2);
 
   const start = new Date(date.getFullYear(), 0, 0);
   const diff = date.getTime() - start.getTime();
-  const dayOfYear = Math.floor(diff / 86400000)
+  const JulianDate = Math.floor(diff / 86400000)
     .toString()
     .padStart(3, "0");
 
-  return `${year}${dayOfYear}`;
+  return `${year}${JulianDate}`;
 }
 
-export function generateUniqueId(): string {
+export function generateUniqueId(currentTodos: Todo[]): string {
   const now = new Date();
-  const dayKey = getDayKey(now);
+  const JulianDate = getJulianDate(now);
 
   // RESET DAILY: IF NEXT DAY THEN RESET SEQUENCE NUMBER
-  if (dayKey !== lastDayKey) {
-    sequence = 0;
-    lastDayKey = dayKey;
-  }
+  // if (JulianDate !== lastJulianDate) {
+  //   sequence = 0;
+  //   lastJulianDate = JulianDate;
+  // }
 
   // MODULO FOR SEQ NUMB RECYLING AFTER 99 THEN RESTART 01
   sequence = (sequence + 1) % 100;
 
-  const seq = sequence.toString().padStart(2, "0");
-  return `${dayKey}${seq}`;
+  while (true) {
+    const seq = sequence.toString().padStart(2, "0");
+
+    const bidId = `${JulianDate}${seq}`;
+
+    const exist = currentTodos.some((todo) => todo.id === bidId);
+
+    if (!exist) {
+      return bidId;
+    }
+
+    sequence++;
+  }
 }
 
 // TASK OVERDUE

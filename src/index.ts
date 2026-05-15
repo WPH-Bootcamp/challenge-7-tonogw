@@ -37,9 +37,19 @@ const DEFAULT_USER = "Guest";
 // API FETCH GET & POST
 const GET_API_URL =
   "https://my-json-server.typicode.com/tonogw/todo-api/v1_todos";
-// const POST_API_URL = "https://jsonplaceholder.typicode.com/posts";
-const POST_API_URL = "http://localhost:3000/todos";
 
+// API POST URL OPTION A: CLOUD API
+const POST_API_URL = "https://jsonplaceholder.typicode.com/posts";
+
+// API POST URL OPTION B: LOCAL API
+// RUN TODO APP ON LOCAL HOST, python3 -m http.server 8080
+// THEN OPEN TODO APP IN BROWSER http://localhost:8080/
+// DO NOT USE LIVE SERVER FROM VSCODE IF CHOOSE OPTION B
+// THEN INSTALL JSON-SERVER: npm install --save-dev json-server
+// OPTION B:
+// const POST_API_URL = "http://localhost:3000/todos";
+
+// GET DATA BY FETCH API
 export async function getTodosFromAPI(): Promise<Todo[]> {
   try {
     const res = await fetch(GET_API_URL);
@@ -64,16 +74,22 @@ export async function getTodosFromAPI(): Promise<Todo[]> {
   }
 }
 
-// POST DATA TO API
+// POST DATA TO API JSON-SERVER
 export async function postTodoToAPI(todo: Todo): Promise<void> {
   try {
-    await fetch(POST_API_URL, {
+    const res = await fetch(POST_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(todo),
     });
+
+    if (!res.ok) {
+      throw new Error(`POST failed: ${res.status}`);
+    }
+
+    console.log("POST success");
   } catch (err) {
     if (err instanceof Error) {
       console.error("POST error: ", err.message);
@@ -111,19 +127,8 @@ const el = {
   dateInput: document.getElementById("page-input-date-input"),
   saveBtn: document.getElementById("save-task"),
   cancelBtn: document.getElementById("page-input-cancel-btn"),
-  // deleteBtn: document.getElementById("delete-btn"),
-
-  // FORM EDIT
-  // editPage: document.getElementById("page-edit"),
-  // editFieldDesc: document.getElementById("edit-field"),
-  // editFieldDate: document.getElementById("edit-field"),
-  // saveEditBtn: document.getElementById("update-task"),
-  // cancelEditBtn: document.getElementById("cancel-edit"),
 };
 
-// const description = (el.descInput as HTMLTextAreaElement).value.trim();
-
-// let userName = getUserName();
 let editTodoId: string | null = null;
 
 // INITIALIZATION APP
@@ -143,12 +148,12 @@ async function init() {
   renderTodos(service);
 }
 
+// USER PROFILE NAME OR GUEST AS DEFAULT USER
 function renderUser(): void {
   const clickDefaultUser = getUserName();
 
   if (!el.userName) {
     return;
-    // el.userName.textContent = getUserName();
   }
 
   el.userName.textContent = clickDefaultUser;
@@ -156,7 +161,6 @@ function renderUser(): void {
   if (clickDefaultUser === DEFAULT_USER) {
     el.userName.style.cursor = "pointer";
     el.userName.classList.add("profile-btn");
-    // el.userName.style.color = "blue";
 
     el.userName.onclick = () => {
       const replaceGuest = prompt("Input your name to replace Guest");
@@ -190,6 +194,7 @@ let sortWay = {
   completed: true,
 };
 
+// EVENTS BINDER
 function bindEvents(): void {
   el.startBtn?.addEventListener("click", () => {
     showMain();
@@ -198,7 +203,7 @@ function bindEvents(): void {
       const clickDefaultUser = prompt("Please input your name: ");
 
       if (clickDefaultUser && clickDefaultUser.trim()) {
-        setUserName(clickDefaultUser);
+        setUserName(clickDefaultUser.trim());
       }
     }
     renderUser();
@@ -207,12 +212,10 @@ function bindEvents(): void {
   // HINT TO CHANGE GUEST INTO USER NAME
   if (getUserName() === DEFAULT_USER) {
     el.userName?.setAttribute("title", "Click to change your name");
-  } else {
-    // el.userName?.remove();
   }
 
   // EXIT BUTTON TO SIGN OUT FROM TODO APP
-  el.exitBtn?.setAttribute("tooltip", "Logout");
+  el.exitBtn?.setAttribute("title", "Logout");
   el.exitBtn?.addEventListener("click", () => {
     showCover();
   });
@@ -226,9 +229,6 @@ function bindEvents(): void {
   el.cancelBtn?.addEventListener("click", () => {
     closeForm();
   });
-
-  // // DELETE BUTTON ON TODO LIST
-  // el.deleteBtn?.classList.value("delete-btn");
 
   el.searchInput?.addEventListener("input", () => {
     const searchKey = (el.searchInput as HTMLInputElement).value.toLowerCase();
@@ -264,23 +264,12 @@ function bindEvents(): void {
     renderTodos(service);
   });
 
-  // SAVE ADD TODO OR TASK
   el.saveBtn?.addEventListener("click", async () => {
     const title = (el.titleInput as HTMLInputElement).value.trim();
 
     const description = (el.descInput as HTMLTextAreaElement).value.trim();
 
     const deadline = (el.dateInput as HTMLInputElement).value.trim();
-
-    const todo = {
-      id: generateUniqueId(service.getAll()),
-      title,
-      description,
-      completed: false,
-      deadline,
-      // createdAt: new Date().toISOString(),
-      createdAt: new Date().toLocaleString(),
-    };
 
     if (!title) {
       alert("Title is required");
@@ -294,6 +283,15 @@ function bindEvents(): void {
         deadline,
       });
     } else {
+      const todo: Todo = {
+        id: generateUniqueId(service.getAll()),
+        title,
+        description,
+        completed: false,
+        deadline,
+        createdAt: new Date().toLocaleString(),
+      };
+
       service.add(todo);
       await postTodoToAPI(todo);
     }
@@ -347,10 +345,10 @@ function openEditForm(todo: Todo): void {
 
 // EXIT FROM FORM INPUT
 function closeForm(): void {
-  // el.mainPage!.classList = "page-input-cancel-btn";
+  editTodoId = null;
 
   el.inputPage?.classList.add("hidden");
-  // el.mainPage?.classList.remove("hidden");
+  el.mainPage?.classList.remove("hidden");
 }
 
 export function renderTodos(service: TodoService, searchKey = "") {
@@ -386,7 +384,6 @@ export function renderTodos(service: TodoService, searchKey = "") {
     tdDeadline.setAttribute("data-label", "Deadline");
     tdDeadline.style.textAlign = "center";
 
-    // tdDeadline.textContent = todo.deadline || "-";
     if (todo.deadline) {
       const [date, time] = todo.deadline.split("T");
 

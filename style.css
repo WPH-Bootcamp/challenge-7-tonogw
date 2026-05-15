@@ -241,11 +241,11 @@ body {
   width: 100%;
   /* max-width: 1100px; */
 
-  display: flex;
+  display: inline-flex;
   gap: 10px;
 
   align-items: center;
-  margin: 12px auto;
+  /* margin: 12px auto; */
 }
 
 .search-input {
@@ -256,7 +256,7 @@ body {
   border: 1px solid grey;
   border-radius: 6px;
 
-  padding: 0 12px;
+  padding: 0 px;
 
   font-size: 14px;
 }
@@ -305,7 +305,7 @@ body {
   cursor: pointer;
   gap: 10px;
   margin: 0px;
-  margin-bottom: 10px;
+  /* margin-bottom: 0px; */
 }
 
 .page-input-open-btn:hover {
@@ -505,7 +505,7 @@ td:nth-child(6) {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1005;
 }
 
 .page-input-content {
@@ -520,16 +520,16 @@ td:nth-child(6) {
   margin-top: 10px;
 }
 
-.hidden {
+/* .hidden {
   display: none;
-}
+} */
 
 .page-input.hidden {
   display: none;
 }
 
 .page-input {
-  z-index: 999;
+  z-index: 900;
 }
 
 .footer {

@@ -15,6 +15,7 @@ export interface Todo {
   description: string;
   deadline?: string | null;
   completed: boolean;
+  createdAt: string;
 }
 
 export type sortField =

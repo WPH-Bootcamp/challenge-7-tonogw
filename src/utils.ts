@@ -26,7 +26,8 @@ export function isTodo(value: unknown): value is Todo {
     typeof todo.title === "string" &&
     typeof todo.description === "string" &&
     typeof todo.completed === "boolean" &&
-    typeof todo.deadline === "string"
+    typeof todo.deadline === "string" &&
+    typeof todo.createdAt === "string"
   );
 }
 
@@ -53,14 +54,15 @@ export function generateUniqueId(currentTodos: Todo[]): string {
   const now = new Date();
   const JulianDate = getJulianDate(now);
 
-  // RESET DAILY: IF NEXT DAY THEN RESET SEQUENCE NUMBER
-  // if (JulianDate !== lastJulianDate) {
-  //   sequence = 0;
-  //   lastJulianDate = JulianDate;
-  // }
+  // const todayTodos = currentTodos.filter((todo)=>
+  //   todo.id.startsWith(JulianDate),
+  // );
 
-  // MODULO FOR SEQ NUMB RECYLING AFTER 99 THEN RESTART 01
-  sequence = (sequence + 1) % 100;
+  // RESET DAILY: IF NEXT DAY THEN RESET SEQUENCE NUMBER
+  if (JulianDate !== lastJulianDate) {
+    sequence = 0;
+    lastJulianDate = JulianDate;
+  }
 
   while (true) {
     const seq = sequence.toString().padStart(2, "0");
@@ -73,7 +75,7 @@ export function generateUniqueId(currentTodos: Todo[]): string {
       return bidId;
     }
 
-    sequence++;
+    sequence = (sequence + 1) % 100;
   }
 }
 

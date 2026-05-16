@@ -204,15 +204,6 @@ function bindEvents(): void {
     renderUser();
   });
 
-  // HINT TO CHANGE GUEST INTO USER NAME
-  // if (getUserName() === DEFAULT_USER) {
-  //   el.userName?.setAttribute("title", "Click to change your name");
-  //   el.userName!.style.cursor = "pointer";
-  // } else {
-  //   el.userName?.removeAttribute("title");
-  //   el.userName!.style.cursor = "default";
-  // }
-
   // EXIT BUTTON TO SIGN OUT FROM TODO APP
   el.exitBtn?.setAttribute("title", "Logout");
   el.exitBtn?.addEventListener("click", () => {

@@ -101,10 +101,8 @@ export class TodoService {
   sortBy(field: sortField, asc = true): void {
     this.todos.sort((a, b): number => {
       let result: number = 0;
+
       // SORT BY UNIQ ID
-      // if (field === "id") {
-      //   return a.id.localeCompare(b.id);
-      // }
       if (field === "id") {
         result = Number(a.id) - Number(b.id);
       }
@@ -116,15 +114,26 @@ export class TodoService {
 
       // SORT BY END DATE
       if (field === "deadline") {
-        result =
-          // new Date(a.deadline || "-").getTime() -
-          // new Date(b.deadline || "-").getTime(),
-          (a.deadline || "-").localeCompare(b.deadline || "-");
+        result = (a.deadline || "-").localeCompare(b.deadline || "-");
       }
 
+      // SORT BY STATUS
       if (field === "completed") {
-        result = Number(a.completed) - Number(b.completed);
+        const getRank = (todo: Todo): number => {
+          if (todo.completed) {
+            return 2;
+          }
+
+          if (todo.deadline && new Date(todo.deadline) < new Date()) {
+            return 1;
+          }
+
+          return 0;
+        };
+
+        result = getRank(a) - getRank(b);
       }
+
       return asc ? result : -result;
     });
   }

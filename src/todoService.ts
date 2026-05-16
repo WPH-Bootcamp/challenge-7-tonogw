@@ -42,7 +42,7 @@ export class TodoService {
     this.todos = todos;
   }
 
-  //   ADD OR INSERT NEW TODO
+  // ADD OR INSERT NEW TODO
   add(todo: Todo): void {
     this.todos.push(todo);
   }
@@ -65,18 +65,8 @@ export class TodoService {
     todo.description = updates.description;
     todo.deadline = updates.deadline;
   }
-  //   delete(id: string): void {
-  //     const todos = this.todos.find((t) => t.id !== id);
-  //   }
 
-  //   toggle(id: string): void {
-  //     const todo = this.todos.find((t) => t.id === id);
-  //     if (!todo) throw new Error("Todo not found");
-
-  //     todo.completed = !todo.completed;
-  //   }
-
-  //   DELETE A TODO LIST
+  // DELETE A TODO LIST
   delete(id: string): void {
     const before = this.todos.length;
 
@@ -87,7 +77,7 @@ export class TodoService {
     }
   }
 
-  //   TO SEARCH AND SORT TODO LIST
+  // TO SEARCH AND SORT TODO LIST
   toggle(id: string): void {
     const todo = this.todos.find((t) => t.id === id);
 

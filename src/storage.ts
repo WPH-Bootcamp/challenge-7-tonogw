@@ -12,6 +12,7 @@
 // TODO: Buat fungsi untuk inisialisasi storage (buat file kosong jika belum ada)
 
 import { Todo } from "./types.js";
+import { isTodoArray } from "./utils.js";
 
 const TODO_STORAGE_KEY = "todos";
 
@@ -21,11 +22,19 @@ export function saveTodos(todos: Todo[]): void {
 
 export function loadTodos(): Todo[] {
   const data = localStorage.getItem(TODO_STORAGE_KEY);
-  if (!data) return [];
+  if (!data) {
+    return [];
+  }
 
-  const parsed: unknown = JSON.parse(data);
+  try {
+    const parsed: unknown = JSON.parse(data);
 
-  if (!Array.isArray(parsed)) return [];
+    if (!isTodoArray(parsed)) {
+      return [];
+    }
 
-  return parsed as Todo[];
+    return parsed;
+  } catch {
+    return [];
+  }
 }

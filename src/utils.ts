@@ -26,7 +26,9 @@ export function isTodo(value: unknown): value is Todo {
     typeof todo.title === "string" &&
     typeof todo.description === "string" &&
     typeof todo.completed === "boolean" &&
-    typeof todo.deadline === "string" &&
+    (todo.deadline === null ||
+      todo.deadline === undefined ||
+      typeof todo.deadline === "string") &&
     typeof todo.createdAt === "string"
   );
 }
@@ -72,6 +74,7 @@ export function generateUniqueId(currentTodos: Todo[]): string {
     const exist = currentTodos.some((todo) => todo.id === bidId);
 
     if (!exist) {
+      sequence++;
       return bidId;
     }
 

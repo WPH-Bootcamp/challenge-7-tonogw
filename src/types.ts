@@ -18,9 +18,4 @@ export interface Todo {
   createdAt: string;
 }
 
-export type sortField =
-  | "id"
-  | "title"
-  | "description"
-  | "deadline"
-  | "completed";
+export type sortField = "id" | "title" | "deadline" | "completed";

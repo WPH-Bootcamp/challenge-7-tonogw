@@ -1,5 +1,5 @@
 import { Todo } from "./types.js";
-import { generateUniqueId, getStatusLabel } from "./utils.js";
+import { generateUniqueId, getStatusLabel, isTodoArray } from "./utils.js";
 import { TodoService } from "./todoService.js";
 import { loadTodos, saveTodos } from "./storage.js";
 
@@ -35,7 +35,7 @@ export async function getTodosFromAPI(): Promise<Todo[]> {
 
     const data: unknown = await res.json();
 
-    if (!Array.isArray(data)) {
+    if (!isTodoArray(data)) {
       return [];
     }
 

@@ -1,4 +1,5 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/BgngqaTb)
+
 # Assignment 7: Transform To-Do App using TypeScript
 
 Selamat datang di challenge Week 7. Di sini kamu akan mengubah aplikasi To-Do dari JavaScript menjadi TypeScript yang fully typed.
@@ -45,7 +46,15 @@ todo-app-typescript/
 
 3. Jalankan aplikasi:
 
-   ```
+```
+npm install
+npm run build
+
+then open:
+index.html => open with live server
+```
+
+   <!-- ```
    npm start
    ```
 
@@ -53,7 +62,7 @@ todo-app-typescript/
 
    ```
    npm run dev
-   ```
+   ``` -->
 
 ## Panduan Pengembangan
 
@@ -121,23 +130,23 @@ Sebelum submit, pastikan:
 
 ## Kriteria Penilaian
 
-| Kriteria | Bobot | Deskripsi |
-|----------|-------|-----------|
-| **Type Safety** | 25% | - Penggunaan TypeScript yang proper (no `any` types)<br>- Interface dan type definitions yang lengkap<br>- Type guards untuk validasi runtime |
-| **Functionality** | 30% | - Fitur CRUD berjalan dengan baik<br>- Format tampilan sesuai spesifikasi<br>- Data persistence (read/write JSON) |
-| **Code Quality** | 20% | - Struktur kode rapi dan modular<br>- Penamaan variabel/fungsi yang deskriptif<br>- Proper imports/exports antar module |
-| **Error Handling** | 15% | - Try-catch untuk operasi file<br>- Validasi input user<br>- Error messages yang informatif |
-| **Best Practices** | 10% | - Mengikuti panduan pengembangan<br>- No TypeScript compile errors<br>- Code yang maintainable |
+| Kriteria           | Bobot | Deskripsi                                                                                                                                     |
+| ------------------ | ----- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type Safety**    | 25%   | - Penggunaan TypeScript yang proper (no `any` types)<br>- Interface dan type definitions yang lengkap<br>- Type guards untuk validasi runtime |
+| **Functionality**  | 30%   | - Fitur CRUD berjalan dengan baik<br>- Format tampilan sesuai spesifikasi<br>- Data persistence (read/write JSON)                             |
+| **Code Quality**   | 20%   | - Struktur kode rapi dan modular<br>- Penamaan variabel/fungsi yang deskriptif<br>- Proper imports/exports antar module                       |
+| **Error Handling** | 15%   | - Try-catch untuk operasi file<br>- Validasi input user<br>- Error messages yang informatif                                                   |
+| **Best Practices** | 10%   | - Mengikuti panduan pengembangan<br>- No TypeScript compile errors<br>- Code yang maintainable                                                |
 
 ### Detail Penilaian per File
 
-| File | Poin Utama |
-|------|-----------|
-| `types.ts` | Interface Todo lengkap dengan tipe data yang sesuai |
-| `utils.ts` | Type guards untuk validasi Todo dan Todo array |
-| `storage.ts` | Error handling saat baca/tulis file, folder data otomatis dibuat |
-| `todoService.ts` | CRUD operations dengan type-safe parameters |
-| `index.ts` | Menu interaktif dengan validasi input dan loop sampai exit |
+| File             | Poin Utama                                                       |
+| ---------------- | ---------------------------------------------------------------- |
+| `types.ts`       | Interface Todo lengkap dengan tipe data yang sesuai              |
+| `utils.ts`       | Type guards untuk validasi Todo dan Todo array                   |
+| `storage.ts`     | Error handling saat baca/tulis file, folder data otomatis dibuat |
+| `todoService.ts` | CRUD operations dengan type-safe parameters                      |
+| `index.ts`       | Menu interaktif dengan validasi input dan loop sampai exit       |
 
 ## Tips
 

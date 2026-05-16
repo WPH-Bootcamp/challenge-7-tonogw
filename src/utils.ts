@@ -6,3 +6,91 @@
 // TODO: Buat fungsi helper untuk menampilkan tanggal/waktu dengan format yang bagus
 
 // TODO: Buat fungsi untuk memastikan input dari user adalah string yang valid
+
+// import { ftruncateSync } from "fs";
+import { Todo } from "./types.js";
+
+export function isTodo(value: unknown): value is Todo {
+  if (typeof value !== "object") {
+    return false;
+  }
+
+  if (value === null) {
+    return false;
+  }
+
+  const todo = value as Todo;
+
+  return (
+    typeof todo.id === "string" &&
+    typeof todo.title === "string" &&
+    typeof todo.description === "string" &&
+    typeof todo.completed === "boolean" &&
+    (todo.deadline === null ||
+      todo.deadline === undefined ||
+      typeof todo.deadline === "string") &&
+    typeof todo.createdAt === "string"
+  );
+}
+
+export function isTodoArray(value: unknown): value is Todo[] {
+  return Array.isArray(value) && value.every(isTodo);
+}
+
+let sequence = 0;
+let lastJulianDate = "";
+
+function getJulianDate(date: Date): string {
+  const year = date.getFullYear().toString().slice(-2);
+
+  const start = new Date(date.getFullYear(), 0, 0);
+  const diff = date.getTime() - start.getTime();
+  const JulianDate = Math.floor(diff / 86400000)
+    .toString()
+    .padStart(3, "0");
+
+  return `${year}${JulianDate}`;
+}
+
+export function generateUniqueId(currentTodos: Todo[]): string {
+  const now = new Date();
+  const JulianDate = getJulianDate(now);
+
+  // const todayTodos = currentTodos.filter((todo)=>
+  //   todo.id.startsWith(JulianDate),
+  // );
+
+  // RESET DAILY: IF NEXT DAY THEN RESET SEQUENCE NUMBER
+  if (JulianDate !== lastJulianDate) {
+    sequence = 0;
+    lastJulianDate = JulianDate;
+  }
+
+  while (true) {
+    const seq = sequence.toString().padStart(2, "0");
+
+    const bidId = `${JulianDate}${seq}`;
+
+    const exist = currentTodos.some((todo) => todo.id === bidId);
+
+    if (!exist) {
+      sequence++;
+      return bidId;
+    }
+
+    sequence = (sequence + 1) % 100;
+  }
+}
+
+// TASK OVERDUE
+export function isOverdue(todo: Todo): boolean {
+  if (!todo.deadline) return false;
+
+  return !todo.completed && new Date(todo.deadline) < new Date();
+}
+
+export function getStatusLabel(todo: Todo): string {
+  if (isOverdue(todo)) return "OVERDUE";
+  if (todo.completed) return "DONE";
+  return "ACTIVE";
+}

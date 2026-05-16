@@ -22,3 +22,109 @@
 // - Berikan nomor urut untuk memudahkan user memilih
 
 // TODO: Buat fungsi untuk mencari To-Do berdasarkan keyword
+
+import { Todo, sortField } from "./types.js";
+
+export class TodoService {
+  //   private todos: Todo[] = [];
+  private todos: Todo[];
+
+  constructor(initial: Todo[] = []) {
+    this.todos = initial;
+  }
+
+  // SHOW ALL TO DO LIST
+  getAll(): Todo[] {
+    return this.todos;
+  }
+
+  setTodos(todos: Todo[]): void {
+    this.todos = todos;
+  }
+
+  // ADD OR INSERT NEW TODO
+  add(todo: Todo): void {
+    this.todos.push(todo);
+  }
+
+  update(
+    id: string,
+    updates: {
+      title: string;
+      description: string;
+      deadline?: string | null;
+    },
+  ): void {
+    const todo = this.todos.find((t) => t.id === id);
+
+    if (!todo) {
+      throw new Error("Todo not found");
+    }
+
+    todo.title = updates.title;
+    todo.description = updates.description;
+    todo.deadline = updates.deadline;
+  }
+
+  // DELETE A TODO LIST
+  delete(id: string): void {
+    const before = this.todos.length;
+
+    this.todos = this.todos.filter((t) => t.id !== id);
+
+    if (this.todos.length === before) {
+      throw new Error("Todo not found");
+    }
+  }
+
+  // TO SEARCH AND SORT TODO LIST
+  toggle(id: string): void {
+    const todo = this.todos.find((t) => t.id === id);
+
+    if (!todo) {
+      throw Error("Todo not found");
+    }
+    todo.completed = !todo.completed;
+  }
+
+  // sortBy(field: sortField | "id" | "title" | "deadline" | "completed"): void {
+  sortBy(field: sortField, asc = true): void {
+    this.todos.sort((a, b): number => {
+      let result: number = 0;
+
+      // SORT BY UNIQ ID
+      if (field === "id") {
+        result = Number(a.id) - Number(b.id);
+      }
+
+      // SORT BY TITLE
+      if (field === "title") {
+        result = a.title.localeCompare(b.title);
+      }
+
+      // SORT BY END DATE
+      if (field === "deadline") {
+        result = (a.deadline || "-").localeCompare(b.deadline || "-");
+      }
+
+      // SORT BY STATUS
+      if (field === "completed") {
+        const getRank = (todo: Todo): number => {
+          if (todo.completed) {
+            return 2;
+          }
+
+          if (todo.deadline && new Date(todo.deadline) < new Date()) {
+            return 1;
+          }
+
+          return 0;
+        };
+
+        result = getRank(a) - getRank(b);
+      }
+
+      return asc ? result : -result;
+    });
+  }
+}

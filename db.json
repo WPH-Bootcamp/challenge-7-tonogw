@@ -1,0 +1,22 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "Belajar Javascript",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "title": "Kerjakan Challenge-5",
+      "completed": false
+    },
+    {
+      "id": "2613502",
+      "title": "test",
+      "description": "test",
+      "completed": false,
+      "deadline": "",
+      "createdAt": "5/15/2026, 8:23:00 PM"
+    }
+  ]
+}
